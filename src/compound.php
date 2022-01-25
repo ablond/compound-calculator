@@ -35,7 +35,7 @@ $projects = [
             ],
         ],
         'costPerNode'          => 12.5,
-        'tokenValue'           => 200,
+        'tokenValue'           => 350,
         'monthlyFeePerNode'    => 0,
         'claimTax'             => 0.2,
         'currentTokenOwned'    => 8,
