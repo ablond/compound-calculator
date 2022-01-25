@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  php-cli:
+    build: docker/php
+    volumes:
+      - .:/var/www/compound-calculator
+      - $HOME/.composer:/tmp
+      - /etc/group:/etc/group:ro
+      - /etc/passwd:/etc/passwd:ro
+      - $SSH_AUTH_SOCK:/ssh-auth.sock
+    working_dir: /var/www/compound-calculator
+    user: 1000:1000
+    hostname: ${WEB_HOSTNAME-h2officedev}
