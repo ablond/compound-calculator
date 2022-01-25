@@ -7,9 +7,16 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+$startDate = new \DateTime();
+
 $projects = [
     'Atlas' => [
-        'rewardPerNode'        => 0.1,
+        'rewardPerNode'        => [
+            [
+                'date' => $startDate,
+                'reward' => 0.1,
+            ],
+        ],
         'costPerNode'          => 10,
         'tokenValue'           => 350,
         'monthlyFeePerNode'    => 25,
@@ -18,16 +25,29 @@ $projects = [
         'currentNodeOwned'     => 3,
     ],
     'Thor' => [
-        'rewardPerNode'        => 0.33,
+        'rewardPerNode'        => [
+            [
+                'date' => new \DateTime('2022-02-15'),
+                'reward' => 0.1,
+            ],[
+                'date' => $startDate,
+                'reward' => 0.33,
+            ],
+        ],
         'costPerNode'          => 12.5,
         'tokenValue'           => 200,
         'monthlyFeePerNode'    => 0,
         'claimTax'             => 0.2,
-        'currentTokenOwned'    => 0,
+        'currentTokenOwned'    => 8,
         'currentNodeOwned'     => 2,
     ],
     'Power' => [
-        'rewardPerNode'        => 0.7,
+        'rewardPerNode'        => [
+            [
+                'date' => $startDate,
+                'reward' => 0.7,
+            ],
+        ],
         'costPerNode'          => 50,
         'tokenValue'           => 20,
         'monthlyFeePerNode'    => 0,
@@ -37,8 +57,7 @@ $projects = [
     ]
 ];
 
-$startDate = new \DateTime();
-$compoundLimitDate = new \DateTime('2022-07-03');
+$compoundLimitDate = new \DateTime('2022-07-04');
 
 echo sprintf("------ Compound Stop Date : %s \n", $compoundLimitDate->format('Y-m-d'));
 
@@ -56,7 +75,7 @@ $table->setHeaders([
 foreach ($projects as $projectLabel => $project) {
     list($nodeNumber, $token) = calculateNodeNumberAfterCompoundPeriod($project, $startDate, $compoundLimitDate);
 
-    $tokenPerMonth = $project['rewardPerNode'] * 30 * $nodeNumber;
+    $tokenPerMonth = getRewardPerNode($project, $compoundLimitDate) * 30 * $nodeNumber;
     $claimTax = $tokenPerMonth * $project['claimTax'];
     $tokenPerMonth -= $claimTax;
     $tokenPerMonthValue = $tokenPerMonth * $project['tokenValue'];
@@ -80,7 +99,8 @@ function calculateNodeNumberAfterCompoundPeriod($project, $startDate, $compoundL
     $date = clone $startDate;
 
     for ($i = 0; $i < $compoundLimitDate->diff($startDate)->days; $i++) {
-        $token += $project['rewardPerNode'] * $nodeNumber;
+        $rewardPerNode = getRewardPerNode($project, $date);
+        $token += $rewardPerNode * $nodeNumber;
 
         $date->modify('+1 day');
 
@@ -92,3 +112,13 @@ function calculateNodeNumberAfterCompoundPeriod($project, $startDate, $compoundL
 
     return [$nodeNumber, $token];
 }
+
+function getRewardPerNode($project, $date)
+{
+    foreach ($project['rewardPerNode'] as $rewardPerNode) {
+        if ($rewardPerNode['date'] <= $date) {
+            return $rewardPerNode['reward'];
+        }
+    }
+}
+
