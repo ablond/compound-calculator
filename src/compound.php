@@ -24,7 +24,7 @@ $projects = [
         'currentTokenOwned'    => 5,
         'currentNodeOwned'     => 3,
     ],
-    'Thor' => [
+    'ThorFactory' => [
         'rewardPerNode'        => [
             [
                 'date' => new \DateTime('2022-02-15'),
