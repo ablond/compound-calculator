@@ -13,41 +13,11 @@ class ThorFactory
     static public function build(): Project
     {
         $project = new Project();
-        $project->name = 'ThorFactory Financial';
+        $project->name = 'Thor Financial';
 
         $token = new Token();
         $token->name = 'THOR';
         $token->value = 150;
-
-//        $node = new Node();
-//        $node->name = 'Heimdall';
-//        $node->claimTax = 0.1;
-//        $node->costInToken = 1.25;
-//        $node->monthlyFee = 0;
-//
-//        $dailyReward = new DailyReward();
-//        $dailyReward->token = $token;
-//        $dailyReward->amount = 0.02125;
-//        $dailyReward->dateStart = new \DateTime();
-//
-//        $node->token = $token;
-//        $node->dailyRewardInToken[] = $dailyReward;
-//        $project->nodes[] = $node;
-
-//        $node = new Node();
-//        $node->name = 'Freya';
-//        $node->claimTax = 0.15;
-//        $node->costInToken = 6.25;
-//        $node->monthlyFee = 0;
-//
-//        $dailyReward = new DailyReward();
-//        $dailyReward->token = $token;
-//        $dailyReward->amount = 0.13125;
-//        $dailyReward->dateStart = new \DateTime();
-//        $node->token = $token;
-//        $node->dailyRewardInToken[] = $dailyReward;
-//
-//        $project->nodes[] = $node;
 
         $node = new Node();
         $node->name = 'Thor';
@@ -71,21 +41,6 @@ class ThorFactory
         $node->dailyReward[] = $dailyReward;
 
         $project->node = $node;
-
-//        $node = new Node();
-//        $node->name = 'Odin';
-//        $node->claimTax = 0.25;
-//        $node->costInToken = 78.125;
-//        $node->monthlyFee = 0;
-//
-//        $dailyReward = new DailyReward();
-//        $dailyReward->token = $token;
-//        $dailyReward->amount = 2.7335;
-//        $dailyReward->dateStart = new \DateTime();
-//        $node->token = $token;
-//        $node->dailyRewardInToken[] = $dailyReward;
-//
-//        $project->nodes[] = $node;
 
         return $project;
     }

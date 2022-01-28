@@ -18,15 +18,21 @@ class NodeCompound
     private function init()
     {
         $this->output = new ConsoleOutput();
+    }
+
+    private function initTable()
+    {
         $this->table = new Table($this->output);
 
         $this->table->setHeaders([
+            'Date',
             'Project',
             'Node number',
             'Remaining Token',
-            'Monthly Token Claimable',
+            'Mth Token Claimable',
             'Token Value',
-            'Monthly Passive income',
+            'Mth Psv Income',
+            'Mth Psv Income (Net)',
         ]);
     }
 
@@ -34,34 +40,34 @@ class NodeCompound
     {
         $this->init();
 
-        $maxCompoundDate = new \DateTime('2022-07-04');
+        $maxCompoundDates = [
+            new \DateTime('2022-03-01'),
+            new \DateTime('2022-04-01'),
+            new \DateTime('2022-05-01'),
+            new \DateTime('2022-06-01'),
+            new \DateTime('2022-07-01'),
+            new \DateTime('2022-08-01'),
+        ];
 
-        $thorStudy = new CompoundStudy();
-        $thorStudy->dateStart = new \DateTime('2022-01-28');
-        $thorStudy->dateEnd = $maxCompoundDate;
-        $thorStudy->project = ThorFactory::build();
-        $thorStudy->nodeAmount = 2;
-        $thorStudy->tokenAmount = 10.905992;
+        $this->runCompoundStudies(ThorFactory::class, 2, 10.905992, $maxCompoundDates);
+        $this->runCompoundStudies(AtlasFactory::class, 3, 6.139, $maxCompoundDates);
+        $this->runCompoundStudies(PowerFactory::class, 1, 9.546072, $maxCompoundDates);
+    }
 
-        $this->processCompoundStudy($thorStudy);
+    private function runCompoundStudies($factoryClass, int $nodeAmount, float $tokenAmount, array $maxCompoundDates): void
+    {
+        $this->initTable();
 
-        $atlasStudy = new CompoundStudy();
-        $atlasStudy->dateStart = new \DateTime('2022-01-28');
-        $atlasStudy->dateEnd = $maxCompoundDate;
-        $atlasStudy->project = AtlasFactory::build();
-        $atlasStudy->nodeAmount = 3;
-        $atlasStudy->tokenAmount = 6.139;
+        foreach ($maxCompoundDates as $maxCompoundDate) {
+            $powerStudy = new CompoundStudy();
+            $powerStudy->dateStart = new \DateTime('2022-01-28');
+            $powerStudy->dateEnd = $maxCompoundDate;
+            $powerStudy->project = $factoryClass::build();
+            $powerStudy->nodeAmount = $nodeAmount;
+            $powerStudy->tokenAmount = $tokenAmount;
 
-        $this->processCompoundStudy($atlasStudy);
-
-        $powerStudy = new CompoundStudy();
-        $powerStudy->dateStart = new \DateTime('2022-01-28');
-        $powerStudy->dateEnd = $maxCompoundDate;
-        $powerStudy->project = PowerFactory::build();
-        $powerStudy->nodeAmount = 1;
-        $powerStudy->tokenAmount = 9.546072;
-
-        $this->processCompoundStudy($powerStudy);
+            $this->processCompoundStudy($powerStudy);
+        }
 
         $this->table->render();
     }
@@ -76,14 +82,17 @@ class NodeCompound
         $tokenPerMonthValue = $tokenPerMonth * $compoundStudy->project->node->token->value;
         $monthlyFees = $compoundStudy->project->node->monthlyFee * $compoundStudy->nodeAmount;
         $monthlyPassiveIncome = $tokenPerMonthValue - $monthlyFees;
+        $monthlyPassiveIncomeWithoutTax = $monthlyPassiveIncome - ($monthlyPassiveIncome * 0.3);
 
         $this->table->addRow([
+            $compoundStudy->dateEnd->format('d/m/Y'),
             $compoundStudy->project->name,
             $compoundStudy->nodeAmount,
-            $compoundStudy->tokenAmount,
+            number_format($compoundStudy->tokenAmount, 2, ',', ' '),
             number_format($tokenPerMonth, 2, ',', ' '),
             '$' . number_format($compoundStudy->project->node->token->value, 2, ',', ' '),
             '$' . number_format($monthlyPassiveIncome, 0, ',', ' '),
+            '$' . number_format($monthlyPassiveIncomeWithoutTax, 0, ',', ' '),
         ]);
     }
 
