@@ -17,7 +17,7 @@ class ThorFactory
 
         $token = new Token();
         $token->name = 'THOR';
-        $token->value = 220;
+        $token->value = 150;
 
 //        $node = new Node();
 //        $node->name = 'Heimdall';
@@ -51,7 +51,7 @@ class ThorFactory
 
         $node = new Node();
         $node->name = 'Thor';
-        $node->claimTax = 0.2;
+        $node->claimTax = 0.15;
         $node->costInToken = 12.5;
         $node->monthlyFee = 0;
 
@@ -65,8 +65,8 @@ class ThorFactory
 
         $dailyReward = new DailyReward();
         $dailyReward->token = $token;
-        $dailyReward->amount = 0.1;
-        $dailyReward->dateStart = new \DateTime('2022-02-15');
+        $dailyReward->amount = 0.125;
+        $dailyReward->dateStart = new \DateTime('2022-02-06');
         $node->token = $token;
         $node->dailyReward[] = $dailyReward;
 

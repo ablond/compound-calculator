@@ -34,32 +34,32 @@ class NodeCompound
     {
         $this->init();
 
-        $maxCompoundDate = new \DateTime('2022-07-08');
+        $maxCompoundDate = new \DateTime('2022-07-04');
 
         $thorStudy = new CompoundStudy();
-        $thorStudy->dateStart = new \DateTime('2022-01-30');
+        $thorStudy->dateStart = new \DateTime('2022-01-28');
         $thorStudy->dateEnd = $maxCompoundDate;
         $thorStudy->project = ThorFactory::build();
-        $thorStudy->nodeAmount = 3;
-        $thorStudy->tokenAmount = 0;
+        $thorStudy->nodeAmount = 2;
+        $thorStudy->tokenAmount = 10.905992;
 
         $this->processCompoundStudy($thorStudy);
 
         $atlasStudy = new CompoundStudy();
-        $atlasStudy->dateStart = new \DateTime('2022-01-7');
+        $atlasStudy->dateStart = new \DateTime('2022-01-28');
         $atlasStudy->dateEnd = $maxCompoundDate;
         $atlasStudy->project = AtlasFactory::build();
         $atlasStudy->nodeAmount = 3;
-        $atlasStudy->tokenAmount = 0;
+        $atlasStudy->tokenAmount = 6.139;
 
         $this->processCompoundStudy($atlasStudy);
 
         $powerStudy = new CompoundStudy();
-        $powerStudy->dateStart = new \DateTime('2022-01-15');
+        $powerStudy->dateStart = new \DateTime('2022-01-28');
         $powerStudy->dateEnd = $maxCompoundDate;
         $powerStudy->project = PowerFactory::build();
         $powerStudy->nodeAmount = 1;
-        $powerStudy->tokenAmount = 0;
+        $powerStudy->tokenAmount = 9.546072;
 
         $this->processCompoundStudy($powerStudy);
 
